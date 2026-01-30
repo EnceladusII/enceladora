@@ -4,6 +4,12 @@ set -euo pipefail
 
 . "$(dirname "$0")/00_helpers.sh"
 
+# Tune the name of the machine
+: "${TARGET_USER:?TARGET_USER must be set}"
+: "${TARGET_WMNAME:?TARGET_WMNAME must be set}"
+as_user "hostnamectl set-hostname '$TARGET_WMNAME'"
+
+# Tuning the dnf manager parameters
 DNF_CONF="/etc/dnf/dnf.conf"
 ts="$(date +%s)"
 
