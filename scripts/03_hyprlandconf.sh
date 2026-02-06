@@ -18,30 +18,31 @@ timestamp() {
 
 backup() {
     local path="$1"
-    local ts
-    ts="$(timestamp)"
-    mv "$path" "$path.bak.$ts"
+    mv "$path" "$path.bak.$(timestamp)"
 }
 
-echo "Deploying .config"
+echo "Merging .config files"
 
 [[ -d "$CONFIG_SRC" ]] || {
     echo "ERROR: $CONFIG_SRC not found"
     exit 1
 }
 
-mkdir -p "$CONFIG_DST"
+find "$CONFIG_SRC" -type f | while read -r src; do
+    rel="${src#$CONFIG_SRC/}"
+    dst="$CONFIG_DST/$rel"
 
-for src in "$CONFIG_SRC"/*; do
-    name="$(basename "$src")"
-    dst="$CONFIG_DST/$name"
+    echo "→ $rel"
 
-    if [[ -e "$dst" && ! -L "$dst" ]]; then
-        echo "  Backup existing $dst"
+    mkdir -p "$(dirname "$dst")"
+
+    if [[ -f "$dst" && ! -L "$dst" ]]; then
+        echo "Backup $dst"
         backup "$dst"
     fi
 
     ln -sfn "$src" "$dst"
+    echo "Symlink $dst → $src"
 done
 
-echo ".config deployment complete"
+echo ".config files merged successfully"
