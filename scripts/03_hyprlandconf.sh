@@ -50,7 +50,7 @@ done
 
 echo ".config files merged successfully"
 
-echo "Merging themes"
+echo "Mergingthemes into $THEMES_DST"
 
 [[ -d "$THEMES_SRC" ]] || {
     echo "ERROR: $THEMES_SRC not found"
@@ -75,8 +75,8 @@ for theme_dir in "$THEMES_SRC"/*/; do
         fi
 
         ln -sfn "$src" "$dst"
-        echo "Symlink $dst → $src"
+        echo "Syminked $dst → $src"
     done
 done
 
-echo "Themes merged successfully"
+echo "Symlink completed successfully"
